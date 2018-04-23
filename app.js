@@ -11,8 +11,7 @@ angular.module('myTest', ['ui.router'])
     templateUrl: '/posts.html',
     controller: 'PostsCtrl'
   });
-
-  // $urlRouterProvider.otherwise('home')
+  $urlRouterProvider.otherwise('home');
 }])
 .factory('posts', [function(){
   var p = {
@@ -34,10 +33,7 @@ angular.module('myTest', ['ui.router'])
         title: $scope.title,
         link: $scope.link,
         upvotes: 0,
-        comments: [
-          {author: 'Joe', body: 'Cool post!', upvotes: 0},
-          {author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0}
-        ]
+        comments: []
       });
       $scope.title = '';
       $scope.link = '';
@@ -47,6 +43,23 @@ angular.module('myTest', ['ui.router'])
     }
   }
 ])
-.controller('PostsCtrl' ['$scope', 'posts', '$stateParams', function($scope, posts, $stateParams){
+.controller('PostsCtrl', ['$scope', 'posts', '$stateParams', function($scope, posts, $stateParams){
   $scope.post = posts.posts[$stateParams.id];
+
+  $scope.incrementUpvotes = function(comment){
+    comment.upvotes += 1
+  };
+
+  $scope.addComment = function(){
+    if (!$scope.body || $scope.body === '') {
+      alert('Comment can not be empty')
+      return
+    }
+    $scope.post.comments.push({
+      body: $scope.body,
+      author: 'user',
+      upvotes: 0
+    })
+    $scope.body = ''
+  }
 }])
